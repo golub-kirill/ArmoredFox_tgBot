@@ -7,8 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
-
-
+import java.util.Calendar;
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -43,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
 
             replyKeyboardMarkup.setKeyboard(keyboard);
         }
-
+        //Поздоровались
         if (message.equals("/start")) {
             sendMessage.enableMarkdown(true).setText
                     ("Привет! Я бот @ArmoredFox. " + "\n" + "\n" +
@@ -55,8 +54,16 @@ public class Bot extends TelegramLongPollingBot {
         if (message.contains("ривет") && !message.contains(" ")) {
             sendMessage.setText("Приветик \uD83D\uDC4B").setReplyToMessageId(messageID);
         }
+        //Во сколько на работу.
+        // TODO разлбраться с установкой будильника.
+        if (message.equalsIgnoreCase("На сколько мне сегодня")){
+            Integer dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            if (dayOfWeek.equals(6)||dayOfWeek.equals(7)){
+                sendMessage.setText("Тебе сегодня на 21:00");
 
-
+            }
+            else sendMessage.setText("Тебе сегодня на 20:00");
+        }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         try {
