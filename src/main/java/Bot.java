@@ -25,7 +25,7 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
         String message = update.getMessage().getText();
 
-        ArrayList<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
+        ArrayList<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -34,49 +34,49 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if (update.getMessage().hasText()) {
+        //Есть ли сообщение и есть ли в нём текст.
+        if (update.hasMessage() || update.getMessage().hasText()) {
 
-            //Поздоровались
-            if (message.contains("/start")) {
-              try {
-                  execute(new SendMessage().setChatId(chatID).enableMarkdown(true).setText(
-                        "Привет! Я бот @ArmoredFox."+ "\n"+"\n"+
-                        "Меня создал [Fox_x](tg://user?id=282614062), но пока он не знает для чего."+"\n"+
-                        "Сейчас я умею совсем немного, но постоянно учусь чему-то новому."));
-              } catch (TelegramApiException e) {
-                  e.printStackTrace();
-              }
-              try {
-                  Thread.sleep(2000);
-              } catch (InterruptedException e) {
-                  e.printStackTrace();
-              }
-                sendMessage.setText("Поделись номером");
+            switch (message){
+                //Поздоровались.
+                case "/start":{
+                    try {
+                    execute(new SendMessage().setChatId(chatID).enableMarkdown(true).setText(
+                            "Привет! Я бот @ArmoredFox."+ "\n"+"\n"+
+                                    "Меня создал [Fox_x](tg://user?id=282614062), но пока он не знает для чего."+"\n"+
+                                    "Сейчас я умею совсем немного, но постоянно учусь чему-то новому."));
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+                    //Задержка в пол секунды перед вторым сообщением.
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    sendMessage.setText("Поделись номером");
 
-                keyboard.clear();
-                keyboardFirstRow.add(new KeyboardButton().setText("Share your number >").setRequestContact(true));
-                keyboard.add(keyboardFirstRow);
-                replyKeyboardMarkup.setKeyboard(keyboard);
-
+                    keyboard.clear();
+                    keyboardFirstRow.add(new KeyboardButton().setText("Share your number >").setRequestContact(true));
+                    keyboard.add(keyboardFirstRow);
+                    replyKeyboardMarkup.setKeyboard(keyboard);
+                } break;
+                //Во сколько на работу.
+                case "На сколько мне сегодня":
+                case "/time": {
+                    Integer dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+                        if (dayOfWeek.equals(6) || dayOfWeek.equals(7)) {
+                            sendMessage.enableMarkdown(true).setText("Тебе сегодня на [21:00]" +
+                                    "(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");
+                        } else sendMessage.enableMarkdown(true).setText("Тебе сегодня на [20:00]" +
+                                "(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");} break;
+                //Твой ID.
+                case "/id":{
+                    sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
+                    System.out.println(authorName + "'s chat ID is - " + authorID);
+                } break;
+                default: sendMessage.setText("Я не понимаю \uD83D\uDE13");
             }
-            //Во сколько на работу.
-            else if (message.contains("На сколько мне сегодня") || message.equals("/time")) {
-                Integer dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-                if (dayOfWeek.equals(6) || dayOfWeek.equals(7)) {
-                    sendMessage.enableMarkdown(true).setText("Тебе сегодня на [21:00]" +
-                            "(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");
-                } else sendMessage.enableMarkdown(true).setText("Тебе сегодня на [20:00]" +
-                        "(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");
-            }
-            //Твой id.
-            else if (message.contains("/id")){
-                sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
-                System.out.println(authorName + "'s chat ID is - " + authorID);
-
-            }
-            //Если не понял
-            else sendMessage.setText("Я не понимаю \uD83D\uDE13");
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
         //Если в сообщении нет текста
         else sendMessage.setText("Я не понимаю \uD83D\uDE13");
