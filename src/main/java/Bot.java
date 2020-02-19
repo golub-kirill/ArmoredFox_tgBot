@@ -25,39 +25,39 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
         String message = update.getMessage().getText();
 
+        ArrayList<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if (update.hasMessage()) {
-            //replykeyboard
+        if (update.getMessage().hasText()) {
 
-        if (message.equals("/replykeyboard")) {
-            sendMessage.setText("Выбери самую красивую:");
-
-            ArrayList<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
-            KeyboardRow keyboardFirstRow = new KeyboardRow();
-            KeyboardRow keyboardSecondRow = new KeyboardRow();
-            keyboard.clear();
-            keyboardFirstRow.add(new KeyboardButton().setText("Share your number >").setRequestContact(true)); //TODO починить это блэд.
-            keyboardSecondRow.add(new KeyboardButton().setText("А я втарая кнапка"));
-            keyboard.add(keyboardFirstRow);
-            keyboard.add(keyboardSecondRow);
-
-            replyKeyboardMarkup.setKeyboard(keyboard);
-
-            if (update.getMessage().hasContact()){
-                String number = update.getMessage().getContact().toString();
-                System.out.println(number);
-            }
-        }
             //Поздоровались
             if (message.contains("/start")) {
-                sendMessage.enableMarkdown(true).setText
-                        ("Привет! Я бот @ArmoredFox. " + "\n" + "\n" +
-                                "Меня создал [Fox_x](tg://user?id=282614062), но пока он не знает для чего." + "\n" +
-                                "Сейчас я умею совсем немного, но постоянно учусь чему-то новому.");
+              try {
+                  execute(new SendMessage().setChatId(chatID).enableMarkdown(true).setText(
+                        "Привет! Я бот @ArmoredFox."+ "\n"+"\n"+
+                        "Меня создал [Fox_x](tg://user?id=282614062), но пока он не знает для чего."+"\n"+
+                        "Сейчас я умею совсем немного, но постоянно учусь чему-то новому."));
+              } catch (TelegramApiException e) {
+                  e.printStackTrace();
+              }
+              try {
+                  Thread.sleep(2000);
+              } catch (InterruptedException e) {
+                  e.printStackTrace();
+              }
+                sendMessage.setText("Поделись номером");
+
+                keyboard.clear();
+                keyboardFirstRow.add(new KeyboardButton().setText("Share your number >").setRequestContact(true));
+                keyboard.add(keyboardFirstRow);
+                replyKeyboardMarkup.setKeyboard(keyboard);
+
             }
             //Во сколько на работу.
             else if (message.contains("На сколько мне сегодня") || message.equals("/time")) {
@@ -74,18 +74,25 @@ public class Bot extends TelegramLongPollingBot {
                 System.out.println(authorName + "'s chat ID is - " + authorID);
 
             }
-
+            //Если не понял
             else sendMessage.setText("Я не понимаю \uD83D\uDE13");
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
+        //Если в сообщении нет текста
+        else sendMessage.setText("Я не понимаю \uD83D\uDE13");
+
+        // Получаем номер телефона.
+        if (update.getMessage().hasContact()){
+            String phoneNumber = update.getMessage().getContact().getPhoneNumber();
+            System.out.println(phoneNumber);
+            sendMessage.setText(authorName+", твой номер телефона:" + phoneNumber);
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         try {execute(sendMessage); }
 
         catch (TelegramApiException e) { e.printStackTrace(); }
-        }
-
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String getBotUsername() {
         return BOT_USERNAME;
     }
