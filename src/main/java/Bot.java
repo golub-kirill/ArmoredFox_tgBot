@@ -2,14 +2,16 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Bot extends TelegramLongPollingBot {
-
-    private static final String BOT_USERNAME = "@ArmoredFox_bot";
-    private static final String BOT_TOKEN = "1017642766:AAGDA0446HoM8cLGzUTHmmmyQ2krLKXT3tA";
+    static final String BOT_USERNAME = "@ArmoredFox_bot";
+    static final String BOT_TOKEN = "1017642766:AAGDA0446HoM8cLGzUTHmmmyQ2krLKXT3tA";
 
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -27,10 +29,11 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
-
-        if (update.hasMessage() && update.getMessage().hasText()) {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (update.hasMessage()) {
             //replykeyboard
-        /*if (message.equals("/replykeyboard")) {
+
+        if (message.equals("/replykeyboard")) {
             sendMessage.setText("Выбери самую красивую:");
 
             ArrayList<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
@@ -43,9 +46,14 @@ public class Bot extends TelegramLongPollingBot {
             keyboard.add(keyboardSecondRow);
 
             replyKeyboardMarkup.setKeyboard(keyboard);
-        }*/
+
+            if (update.getMessage().hasContact()){
+                String number = update.getMessage().getContact().toString();
+                System.out.println(number);
+            }
+        }
             //Поздоровались
-            if (message.contains("start")) {
+            if (message.contains("/start")) {
                 sendMessage.enableMarkdown(true).setText
                         ("Привет! Я бот @ArmoredFox. " + "\n" + "\n" +
                                 "Меня создал [Fox_x](tg://user?id=282614062), но пока он не знает для чего." + "\n" +
@@ -62,11 +70,14 @@ public class Bot extends TelegramLongPollingBot {
             }
             //Твой id.
             else if (message.contains("/id")){
-                sendMessage.setText(authorName + " ,твой ID: " + authorID);
+                sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
                 System.out.println(authorName + "'s chat ID is - " + authorID);
+
             }
 
             else sendMessage.setText("Я не понимаю \uD83D\uDE13");
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         try {execute(sendMessage); }
 
@@ -74,7 +85,7 @@ public class Bot extends TelegramLongPollingBot {
         }
 
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public String getBotUsername() {
         return BOT_USERNAME;
     }
