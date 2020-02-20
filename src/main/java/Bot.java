@@ -13,16 +13,16 @@ import java.util.Calendar;
 public class Bot extends TelegramLongPollingBot {
     static final String BOT_USERNAME = "@ArmoredFox_bot";
     static final String BOT_TOKEN = "1017642766:AAGDA0446HoM8cLGzUTHmmmyQ2krLKXT3tA";
+    String authorPhoneNumber;
 
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
     public void onUpdateReceived(Update update) {
 
         int messageID = update.getMessage().getMessageId();
-        long authorID = update.getMessage().getFrom().getId().longValue();
+        long authorID = update.getMessage().getFrom().getId();
         long chatID = update.getMessage().getChatId();
         String authorName = update.getMessage().getFrom().getFirstName();
-        String authorPhoneNumber;
 
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
         String message = update.getMessage().getText();
