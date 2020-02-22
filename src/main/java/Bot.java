@@ -1,3 +1,4 @@
+import config.ConfigParser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,15 +13,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Bot extends TelegramLongPollingBot {
-    static final String BOT_USERNAME = "@ArmoredFox_bot";
-    static final String BOT_TOKEN = "1017642766:AAGDA0446HoM8cLGzUTHmmmyQ2krLKXT3tA";
 
     String message;
     static String authorName;
     static String authorPhoneNumber;
-    static int messageID = 0;
-    static int authorID = 0;
-    static long chatID = 0;
+    static int messageID;
+    static int authorID;
+    static long chatID;
 
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
@@ -31,7 +30,7 @@ public class Bot extends TelegramLongPollingBot {
         authorID = update.getMessage().getFrom().getId();
         chatID = update.getMessage().getChatId().intValue();
 
-        ConnectionManager connectionManager = new ConnectionManager();
+        DbManager dbManager = new DbManager();
 
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
         message = update.getMessage().getText();
@@ -52,14 +51,14 @@ public class Bot extends TelegramLongPollingBot {
                 case "/start": {
                     //Проверяем на наличие authorID в базе данных.
                     try {
-                        connectionManager.DbConnection();
-                        connectionManager.DbExist(authorID);
-                        connectionManager.connection.close();
+                        dbManager.DbConnection();
+                        dbManager.DbExist(authorID);
+                        dbManager.connection.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                     //Если authorID нет в БД, то просим номер.
-                    if (!connectionManager.isUserExists) {
+                    if (!dbManager.isUserExists) {
                         try {
                             execute(new SendMessage().setChatId(chatID).enableMarkdown(true).setText(
                                     "Привет! Я бот @ArmoredFox." + "\n" + "\n" +
@@ -123,9 +122,9 @@ public class Bot extends TelegramLongPollingBot {
             authorPhoneNumber = update.getMessage().getContact().getPhoneNumber();
 
             try {
-                connectionManager.DbConnection();
-                connectionManager.DbCRUD();
-                connectionManager.connection.close();
+                dbManager.DbConnection();
+                dbManager.DbCRUD();
+                dbManager.connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -144,10 +143,10 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return BOT_USERNAME;
+        return ConfigParser.getBotUserName();
     }
 
     public String getBotToken() {
-        return BOT_TOKEN;
+        return ConfigParser.getBotToken();
     }
 }
