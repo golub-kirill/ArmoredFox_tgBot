@@ -1,27 +1,29 @@
 import config.ConfigParser;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.stickers.Sticker;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Bot extends TelegramLongPollingBot {
 
-    String message;
     static String authorName;
     static String authorPhoneNumber;
     static int messageID;
     static int authorID;
     static long chatID;
-
-    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+    final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+    String message;
 
     public void onUpdateReceived(Update update) {
 
@@ -33,6 +35,7 @@ public class Bot extends TelegramLongPollingBot {
         DbManager dbManager = new DbManager();
 
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
+        SendSticker sendSticker = new SendSticker().setChatId(chatID);
         message = update.getMessage().getText();
 
         ArrayList<KeyboardRow> keyboard = new ArrayList<>();
@@ -44,7 +47,7 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setOneTimeKeyboard(false);
 
         //Есть ли сообщение и есть ли в нём текст.
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (message != null) {
 
             switch (message) {
                 //Поздоровались.
@@ -83,9 +86,10 @@ public class Bot extends TelegramLongPollingBot {
                         replyKeyboardMarkup.setKeyboard(keyboard);
                         sendMessage.setReplyMarkup(replyKeyboardMarkup);
                     }
-                    //Если authorID есть в БД, то кидаем приветствие.
+                    //Если authorID есть в БД, то кидаем приветствие и задаём стикеру fileId.
                     else {
-                        sendMessage.setText("Привет, " + authorName + "! Рад снова тебя видеть \uD83D\uDE0D");
+                        sendMessage.setText("Привет, " + authorName);
+                        sendSticker.setSticker("CAACAgIAAxkBAAIE8V5TBqRu26aF6inNlviQrILWUqAoAAKldwEAAWOLRgw0GESEzOdf4hgE");
                     }
                 }
                 break;
@@ -100,6 +104,16 @@ public class Bot extends TelegramLongPollingBot {
                             "(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");
                 }
                 break;
+                //Погода
+                case "/weather": {
+                    try {
+                        Weather weather = new Weather();
+                        sendMessage.setText(weather.WeatherParser());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
                 //Твой ID.
                 case "/id": {
                     sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
@@ -112,15 +126,20 @@ public class Bot extends TelegramLongPollingBot {
                 default:
                     sendMessage.setText("Я не понимаю \uD83D\uDE13");
             }
+            try {
+                execute(sendMessage);
+                if (sendSticker.getSticker() != null) {
+                    execute(sendSticker);
+                }
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
         }
-        //Если в сообщении нет текста
-        else {
-            sendMessage.setText("Я не понимаю \uD83D\uDE13");
-        }
-        // Получаем номер телефона и пишем в БД.
+        // Получаем номер телефона.
         if (update.getMessage().hasContact()) {
             authorPhoneNumber = update.getMessage().getContact().getPhoneNumber();
-
+            System.out.println(authorName + " отправил свой номер телефона.");
+            //Пишем номер инфу в БД.
             try {
                 dbManager.DbConnection();
                 dbManager.DbCRUD();
@@ -129,15 +148,23 @@ public class Bot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
             //отправляем ответ и удаляем кнопки.
-            sendMessage.setText(authorName + ",я запомнил твой номер телефона:" + authorPhoneNumber).setReplyMarkup(new ReplyKeyboardRemove().setSelective(true));
-
+            try {
+                execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
         }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Пробуем отправить сообщение.
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
+        //Если в сообщении стикер
+        if (update.getMessage().hasSticker()) {
+            //Получили стикер.
+            Sticker sticker = update.getMessage().getSticker();
+            System.out.println(authorName + " прислал стикер. Его FileId - " + sticker.getFileId());
+            try {
+                //Отвечаем фразу + эмодзи полученного стикера.
+                execute(sendMessage.setText("О, это же стикер! " + sticker.getEmoji()));
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }

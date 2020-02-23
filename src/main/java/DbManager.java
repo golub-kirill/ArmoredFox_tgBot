@@ -28,6 +28,11 @@ public class DbManager {
         preparedStatement.setString(3, Bot.authorName);
         preparedStatement.setString(4, Bot.authorPhoneNumber);
         preparedStatement.execute();
+        System.out.println("Записал в бд: \n" +
+                "author_id = "+Bot.authorID+"\n" +
+                "chat_id = "+Bot.chatID+"\n" +
+                "name = "+Bot.authorName+"\n" +
+                "phoneNumber = "+Bot.authorPhoneNumber+"\n");
     }
 
     void DbExist(int authorID) throws SQLException {
