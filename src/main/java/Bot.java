@@ -23,12 +23,13 @@ public class Bot extends TelegramLongPollingBot {
     static int authorID;
     static long chatID;
     final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-    String message;
+    String messageText;
 
     public void onUpdateReceived(Update update) {
 
         authorName = update.getMessage().getFrom().getFirstName();
         messageID = update.getMessage().getMessageId();
+        messageText = update.getMessage().getText();
         authorID = update.getMessage().getFrom().getId();
         chatID = update.getMessage().getChatId().intValue();
 
@@ -36,7 +37,6 @@ public class Bot extends TelegramLongPollingBot {
 
         SendMessage sendMessage = new SendMessage().setChatId(chatID);
         SendSticker sendSticker = new SendSticker().setChatId(chatID);
-        message = update.getMessage().getText();
 
         ArrayList<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
@@ -47,9 +47,9 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setOneTimeKeyboard(false);
 
         //Есть ли сообщение и есть ли в нём текст.
-        if (message != null) {
+        if (messageText != null) {
 
-            switch (message) {
+            switch (messageText) {
                 //Поздоровались.
                 case "/start": {
                     //Проверяем на наличие authorID в базе данных.
@@ -119,6 +119,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
                 }
                 break;
+                //Если не отправил номер.
                 case "Не буду \uD83D\uDD12": {
                     sendMessage.setText("Окей \uD83D\uDE14").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true));
                 }
