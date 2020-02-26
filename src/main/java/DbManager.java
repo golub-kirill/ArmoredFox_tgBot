@@ -5,7 +5,6 @@ import java.sql.*;
 public class DbManager {
 
     static final String URL = "jdbc:postgresql://" + ConfigParser.getDbUrl();
-    //jdbc:postgresql://ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d6303afvk17k4l
     boolean isUserExists;
 
     Connection connection = null;
@@ -22,7 +21,7 @@ public class DbManager {
 
     void DbCRUD() throws SQLException {
 
-        String sql = "INSERT INTO users (author_id, chat_id, name, phoneNumber) VALUE (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (author_id, chat_id, name, phonenumber) VALUES (?, ?, ?, ?)";
         preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, Bot.authorID);
         preparedStatement.setLong(2, Bot.chatID);

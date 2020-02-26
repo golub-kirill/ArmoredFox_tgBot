@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="MySQL - armoredfox_db@localhost" uuid="96bc187a-8f91-43ce-b8b2-1633d9e2a217">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/armoredfox_db</jdbc-url>
-      <driver-properties>
-        <property name="serverTimezone" value="Europe/Kiev" />
-      </driver-properties>
-    </data-source>
     <data-source source="LOCAL" name="PostgreSQL - d6303afvk17k4l@ec2-46-137-84-173.eu-west-1.compute.amazonaws.com" uuid="0a729758-1c13-46bd-9b1e-6cc4486b0788">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
