@@ -143,18 +143,13 @@ public class Bot extends TelegramLongPollingBot {
             //Пишем номер инфу в БД.
             try {
                 dbManager.DbConnection();
-                if (!dbManager.isUserExists){
+                if (!dbManager.isUserExists){ //Проверка на повторную отправку номера.
                     dbManager.DbCRUD();
-                    execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+                    sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true));
                 }
                 dbManager.connection.close();
-            } catch (SQLException | TelegramApiException e) {
-                e.printStackTrace();
-                try {
-                    execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
-                } catch (TelegramApiException ex) {
-                    ex.printStackTrace();
-                }
+            } catch (SQLException e) { e.printStackTrace();
+                    sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true));
             }
         }
         //Если в сообщении стикер
@@ -162,12 +157,8 @@ public class Bot extends TelegramLongPollingBot {
             //Получили стикер.
             Sticker sticker = update.getMessage().getSticker();
             System.out.println(authorName + " прислал стикер. Его FileId - " + sticker.getFileId());
-            try {
-                //Отвечаем фразу + эмодзи полученного стикера.
-                execute(sendMessage.setText("О, это же стикер! " + sticker.getEmoji()));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            //Отвечаем фразу + эмодзи полученного стикера.
+            sendMessage.setText("О, это же стикер! " + sticker.getEmoji());
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
