@@ -143,15 +143,18 @@ public class Bot extends TelegramLongPollingBot {
             //Пишем номер инфу в БД.
             try {
                 dbManager.DbConnection();
-                if (!dbManager.isUserExists){dbManager.DbCRUD();
-                execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
-                }
-                else {
-                execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+                if (!dbManager.isUserExists){
+                    dbManager.DbCRUD();
+                    execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
                 }
                 dbManager.connection.close();
             } catch (SQLException | TelegramApiException e) {
                 e.printStackTrace();
+                try {
+                    execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+                } catch (TelegramApiException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         //Если в сообщении стикер
