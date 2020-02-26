@@ -15,8 +15,6 @@ public class DbManager {
 
         connection = DriverManager.getConnection(URL, ConfigParser.getDbUser(), ConfigParser.getDbPassword());
         statement = connection.createStatement();
-
-
     }
 
     void DbCRUD() throws SQLException {

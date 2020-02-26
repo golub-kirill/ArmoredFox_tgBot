@@ -143,15 +143,14 @@ public class Bot extends TelegramLongPollingBot {
             //Пишем номер инфу в БД.
             try {
                 dbManager.DbConnection();
-                dbManager.DbCRUD();
-                dbManager.connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            //отправляем ответ и удаляем кнопки.
-            try {
+                if (!dbManager.isUserExists){dbManager.DbCRUD();
                 execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
-            } catch (TelegramApiException e) {
+                }
+                else {
+                execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+                }
+                dbManager.connection.close();
+            } catch (SQLException | TelegramApiException e) {
                 e.printStackTrace();
             }
         }
