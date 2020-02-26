@@ -10,5 +10,11 @@
         <property name="serverTimezone" value="Europe/Kiev" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - d6303afvk17k4l@ec2-46-137-84-173.eu-west-1.compute.amazonaws.com" uuid="0a729758-1c13-46bd-9b1e-6cc4486b0788">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d6303afvk17k4l</jdbc-url>
+    </data-source>
   </component>
 </project>

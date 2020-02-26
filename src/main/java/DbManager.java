@@ -4,8 +4,8 @@ import java.sql.*;
 
 public class DbManager {
 
-    static final String URL = "jdbc:mysql://"+ ConfigParser.getDbUrl()+"?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone= Europe/Kiev";
-
+    static final String URL = "jdbc:postgresql://" + ConfigParser.getDbUrl();
+    //jdbc:postgresql://ec2-46-137-84-173.eu-west-1.compute.amazonaws.com:5432/d6303afvk17k4l
     boolean isUserExists;
 
     Connection connection = null;
@@ -16,6 +16,7 @@ public class DbManager {
 
         connection = DriverManager.getConnection(URL, ConfigParser.getDbUser(), ConfigParser.getDbPassword());
         statement = connection.createStatement();
+
 
     }
 
