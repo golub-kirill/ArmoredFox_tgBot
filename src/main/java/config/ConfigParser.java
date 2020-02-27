@@ -1,5 +1,8 @@
 package config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,6 +11,7 @@ import java.util.Properties;
 
 public class ConfigParser {
     private static final String CONFIG_BOT_FILE = "config/config.properties";
+    static final Logger logger = LoggerFactory.getLogger(ConfigParser.class);
 
     private static String BOT_NAME;
     private static String BOT_TOKEN;
@@ -21,8 +25,9 @@ public class ConfigParser {
             InputStream is = new FileInputStream(new File(CONFIG_BOT_FILE));
             properties.load(is);
             is.close();
+            logger.info("config.properties is download");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("config.properties does not exist");
         }
 
         setBotUserName(properties.getProperty("BotUserName"));

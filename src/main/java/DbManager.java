@@ -1,42 +1,53 @@
 import config.ConfigParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class DbManager {
 
-    static final String URL = "jdbc:postgresql://" + ConfigParser.getDbUrl();
-    boolean isUserExists;
+	static final String URL = "jdbc:postgresql://" + ConfigParser.getDbUrl();
+	static final Logger logger = LoggerFactory.getLogger(DbManager.class);
 
-    Connection connection = null;
-    Statement statement = null;
-    PreparedStatement preparedStatement = null;
+	static Connection connection = null;
+	static Statement statement = null;
+	static PreparedStatement preparedStatement = null;
 
-    public void DbConnection() throws SQLException {
+	public void DbConnection() {
 
-        connection = DriverManager.getConnection(URL, ConfigParser.getDbUser(), ConfigParser.getDbPassword());
-        statement = connection.createStatement();
-    }
+		try {
+			connection = DriverManager.getConnection(URL, ConfigParser.getDbUser(), ConfigParser.getDbPassword());
+			statement = connection.createStatement();
+			logger.info("Открыли соединение с БД");
+		} catch (SQLException e) {
+			logger.error("Не получись подключиться к БД, проверьте правильность данных в config.properties", e);
+		}
+	}
 
-    void DbCRUD() throws SQLException {
+	void DbCRUD() {
+		try {
+			String sql = "INSERT INTO users (author_id, chat_id, name, phonenumber) VALUES (?, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, Bot.authorID);
+			preparedStatement.setLong(2, Bot.chatID);
+			preparedStatement.setString(3, Bot.authorName);
+			preparedStatement.setString(4, Bot.authorPhoneNumber);
+			preparedStatement.execute();
 
-        String sql = "INSERT INTO users (author_id, chat_id, name, phonenumber) VALUES (?, ?, ?, ?)";
-        preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, Bot.authorID);
-        preparedStatement.setLong(2, Bot.chatID);
-        preparedStatement.setString(3, Bot.authorName);
-        preparedStatement.setString(4, Bot.authorPhoneNumber);
-        preparedStatement.execute();
-        System.out.println("Записал в бд: \n" +
-                "author_id = "+Bot.authorID+"\n" +
-                "chat_id = "+Bot.chatID+"\n" +
-                "name = "+Bot.authorName+"\n" +
-                "phoneNumber = "+Bot.authorPhoneNumber+"\n");
-    }
+			logger.info("Added user to the database:" + "\n"
+					+ "Name = " + Bot.authorName + "\n"
+					+ "Author ID = " + Bot.authorID + "\n"
+					+ "Chat ID = " + Bot.chatID + "\n"
+					+ "Phone = " + Bot.authorPhoneNumber);
 
-    void DbExist(int authorID) throws SQLException {
-        preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE author_id = " + authorID + "");
-        ResultSet resultSet = preparedStatement.executeQuery();
-        isUserExists = resultSet.next();
-    }
+		} catch (SQLException e) {
+			logger.error("Failed to add row to database.", e);
+		}
+	}
 
+	boolean DbExist(int authorID) throws SQLException {
+		preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE author_id = " + authorID + "");
+		ResultSet resultSet = preparedStatement.executeQuery();
+		return resultSet.next();
+	}
 }
