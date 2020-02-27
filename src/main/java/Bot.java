@@ -85,9 +85,12 @@ public class Bot extends TelegramLongPollingBot {
 						}
 						//Если authorID есть в БД, то кидаем приветствие и задаём стикеру fileId.
 						else {
-							if (DbManager.connection != null) {DbManager.connection.close();}
 							sendMessage.setText("Привет, " + authorName);
 							sendSticker.setSticker("CAACAgIAAxkBAAIE8V5TBqRu26aF6inNlviQrILWUqAoAAKldwEAAWOLRgw0GESEzOdf4hgE");
+							if (DbManager.connection != null) {
+								DbManager.connection.close();
+								logger.info("Закрыли соединение с БД");
+							}
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
