@@ -154,7 +154,7 @@ public class Bot extends TelegramLongPollingBot {
 				dbManager.DbConnection();
 				if (!dbManager.DbExist(authorID)) { //Проверка на повторную отправку номера.
 					dbManager.DbCRUD();
-					sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true));
+					execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
 				}else {
 					logger.warn("Such client_id is already in the database.");
 				    execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
