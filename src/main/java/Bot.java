@@ -89,7 +89,7 @@ public class Bot extends TelegramLongPollingBot {
 							sendSticker.setSticker("CAACAgIAAxkBAAIE8V5TBqRu26aF6inNlviQrILWUqAoAAKldwEAAWOLRgw0GESEzOdf4hgE");
 							if (DbManager.connection != null) {
 								DbManager.connection.close();
-								logger.info("Закрыли соединение с БД");
+								logger.debug("Закрыли соединение с БД");
 							}
 						}
 					} catch (SQLException e) {
@@ -128,7 +128,7 @@ public class Bot extends TelegramLongPollingBot {
 					try {
 						if (DbManager.connection != null) {
 							DbManager.connection.close();
-							logger.info("Закрыли соединение с БД");
+							logger.debug("Закрыли соединение с БД");
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -159,12 +159,12 @@ public class Bot extends TelegramLongPollingBot {
 				if (!dbManager.DbExist(authorID)) { //Проверка на повторную отправку номера.
 					dbManager.DbCRUD();
 					execute(sendMessage.setText("Спасибо, я запомню его \uD83D\uDE0A").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
-				}else {
+				} else {
 					logger.warn("Such client_id is already in the database.");
-				    execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
+					execute(sendMessage.setText("О, а такой номер я уже знаю!").setReplyMarkup(new ReplyKeyboardRemove().setSelective(true)));
 				}
 				DbManager.connection.close();
-				logger.info("Закрыли соединение с БД");
+				logger.debug("Закрыли соединение с БД");
 			} catch (SQLException | TelegramApiException e) {
 				e.getStackTrace();
 			}

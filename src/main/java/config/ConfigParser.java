@@ -25,7 +25,7 @@ public class ConfigParser {
             InputStream is = new FileInputStream(new File(CONFIG_BOT_FILE));
             properties.load(is);
             is.close();
-            logger.info("config.properties is download");
+            logger.debug("config.properties is download");
         } catch (IOException e) {
             logger.error("config.properties does not exist");
         }

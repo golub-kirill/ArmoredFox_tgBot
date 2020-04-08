@@ -18,7 +18,7 @@ public class DbManager {
 		try {
 			connection = DriverManager.getConnection(URL, ConfigParser.getDbUser(), ConfigParser.getDbPassword());
 			statement = connection.createStatement();
-			logger.info("Открыли соединение с БД");
+			logger.debug("Открыли соединение с БД");
 		} catch (SQLException e) {
 			logger.error("Не получись подключиться к БД, проверьте правильность данных в config.properties", e);
 		}
@@ -34,7 +34,7 @@ public class DbManager {
 			preparedStatement.setString(4, Bot.authorPhoneNumber);
 			preparedStatement.execute();
 
-			logger.info("Added user to the database:" + "\n"
+			logger.debug("Added user to the database:" + "\n"
 					+ "Name = " + Bot.authorName + "\n"
 					+ "Author ID = " + Bot.authorID + "\n"
 					+ "Chat ID = " + Bot.chatID + "\n"
@@ -46,6 +46,7 @@ public class DbManager {
 	}
 
 	boolean DbExist(int authorID) throws SQLException {
+		logger.debug("Check for user presence in the database");
 		preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE author_id = " + authorID + "");
 		ResultSet resultSet = preparedStatement.executeQuery();
 		return resultSet.next();
