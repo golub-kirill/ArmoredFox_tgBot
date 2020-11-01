@@ -100,7 +100,7 @@ public class Bot extends TelegramLongPollingBot {
 				//Попробуем отправить Димке сообщение.
 				case "/dimas" :
 					try {
-						sendMessage.setChatId((long) 527994605).setText("Димас, привет от бота :*");
+						sendMessage.setChatId((long) 311189597).setText("Привет от бота :*");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
