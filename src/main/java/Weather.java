@@ -7,7 +7,7 @@ public class Weather {
 
     public String WeatherParser() throws IOException {
 
-        Document document = Jsoup.connect("https://www.msn.com/ru-ru/weather/today?gps=1&el=uuTVxNw9jyM6Ekcem1k8iw%3d%3d").get();
+        Document document = Jsoup.connect("https://www.msn.com/ru-ru/weather/today?gps=1&el=JmCimkUY%2bf4D7%2bSBaNIOXg%3d%3d").get();
         /*String currentWeatherText = "\uD83C\uDF21 Температура составляет " + document.select("span[class=current]").first().text() + "° градусов. \n";
         String feel = "✨ " + document.select("div[class=weather-info]").select("li").get(0).text();
         String velocity = "\uD83D\uDCA8 " + document.select("div[class=weather-info]").select("li").get(1).text();
