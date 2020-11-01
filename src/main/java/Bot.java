@@ -97,8 +97,16 @@ public class Bot extends TelegramLongPollingBot {
 					}
 				}
 				break;
+				//Попробуем отправить Димке сообщение.
+				case "/dimas" :
+					try {
+						sendMessage.setChatId((long) 527994605).setText("Димас, привет от бота :*");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
 				//Во сколько на работу.
-				case "На сколько мне сегодня":
+				/*case "На сколько мне сегодня":
 				case "/time": {
 					Integer dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 					if (dayOfWeek.equals(6) || dayOfWeek.equals(7)) {
@@ -107,7 +115,7 @@ public class Bot extends TelegramLongPollingBot {
 					} else sendMessage.enableMarkdown(true).setText("Тебе сегодня на [20:00]" +
 							"(https://docs.google.com/spreadsheets/d/1Fh72OSGcpNXXPduv734fC0x5CN3T4qzzJCuAkW6yNp4/)");
 				}
-				break;
+				break;*/
 				//Погода
 				case "/weather": {
 					try {
