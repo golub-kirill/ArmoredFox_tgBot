@@ -133,8 +133,12 @@ public class Bot extends TelegramLongPollingBot {
 				break;
 				//Получение БД;
 				case "/getfulldb" :
-					sendMessage.setChatId(282614062L).setText(dbManager.getFullDB());
-				//Если не отправил номер.
+					try {
+						sendMessage.setChatId(282614062L).setText(dbManager.getFullDB());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					//Если не отправил номер.
 				case "Не буду \uD83D\uDD12": {
 					try {
 						if (DbManager.connection != null) {

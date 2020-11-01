@@ -55,7 +55,7 @@ public class DbManager {
 	String getFullDB() {
 		logger.debug("getting full db");
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM users" );
+			preparedStatement = connection.prepareStatement("SELECT chat_id, name, phonenumber FROM users" );
 			return preparedStatement.toString();
 		} catch (SQLException e) {
 			e.printStackTrace();
