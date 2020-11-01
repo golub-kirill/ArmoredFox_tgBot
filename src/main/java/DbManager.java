@@ -51,4 +51,15 @@ public class DbManager {
 		ResultSet resultSet = preparedStatement.executeQuery();
 		return resultSet.next();
 	}
+
+	String getFullDB() {
+		logger.debug("getting full db");
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM users" );
+			return preparedStatement.toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "Ты что-то напорол, полудурок";
+	}
 }

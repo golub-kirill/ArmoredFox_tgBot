@@ -131,6 +131,9 @@ public class Bot extends TelegramLongPollingBot {
 					sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
 				}
 				break;
+				//Получение БД;
+				case "/getfulldb" :
+					sendMessage.setChatId(282614062L).setText(dbManager.getFullDB());
 				//Если не отправил номер.
 				case "Не буду \uD83D\uDD12": {
 					try {
