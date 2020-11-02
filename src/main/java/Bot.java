@@ -15,7 +15,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -97,14 +96,6 @@ public class Bot extends TelegramLongPollingBot {
 					}
 				}
 				break;
-				//Попробуем отправить Димке сообщение.
-				case "/dimas" :
-					try {
-						sendMessage.setChatId((long) 311189597).setText("Привет от бота :*");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
 				//Во сколько на работу.
 				/*case "На сколько мне сегодня":
 				case "/time": {
@@ -131,14 +122,7 @@ public class Bot extends TelegramLongPollingBot {
 					sendMessage.setText(authorName + " ,твой ID: " + authorID).setReplyToMessageId(messageID);
 				}
 				break;
-				//Получение БД;
-				case "/getfulldb" :
-					try {
-						sendMessage.setChatId(282614062L).setText(dbManager.getFullDB());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					//Если не отправил номер.
+				//Если не отправил номер.
 				case "Не буду \uD83D\uDD12": {
 					try {
 						if (DbManager.connection != null) {
